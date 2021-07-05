@@ -1,0 +1,146 @@
+{% extends 'partials/base.html' %} {% block title %}Proformas Page
+{% endblock %} {% load crispy_forms_tags %} {% block content %} 
+{% include 'partials/topside.html' %}
+<div class="row my-4">
+	<div class="col-md-4">
+		{% if messages %} {% for message in messages %}
+		<div class="alert alert-{{ message.tags }}">
+			{{ message }}
+		</div>
+		{% endfor %} {% endif %}
+		<div class="card card-body">
+			<h5>Proforma No: {{ id_proforma }}, Total: {{ proforma_total }}</h5>
+			<hr>
+			<form method="POST">
+				{% csrf_token %} {{ form|crispy }}
+				<input class="btn btn-success btn-block" type="submit" value="Add">
+
+         {% if proforma_total > 0 %}
+         <a class="btn btn-info btn-block" href="{% url 'dashboard-proformas-printed' id_proforma %}" target="_blank">Print</a>
+         {% endif %} 
+
+      </form>
+        </div>
+    </div>
+    <div class="col-md-8">
+      All Products
+      <form action="" method="get">
+          <input class="form-control " name="q" type="text" placeholder="Search...">
+      </form>
+        <table class="table table-hover table-sm bg-white search-table" >
+            <thead class="bg-info text-white">
+                <tr>
+                    <th scope="col" >Name</th>
+                    <th scope="col">Category</th>
+                     <th scope ="col">Price</th>
+                    <th scope="col">Available</th>
+                    <th scope ="col">Quantity</th>
+                    <th scope="col">Activity</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+               {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.category }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.quantity }}</td>
+                     {% if product.quantity > 0 %}
+                    <form action="{% url 'dashboard-proformas-edit-product-add' id_proforma product.id %}" method="GET">
+                    <td>
+                        <input class="form-control " name="quantity" type="number" step="1"  min="1" max="{{ product.quantity }}" id="input_value" placeholder="">
+                    </td>
+                    <td> 
+                      <input class="btn btn-success btn-block" type="submit" value="Add">
+                          
+                    </td>
+                    </form>
+                    {% endif %} 
+                    {% if product.quantity == 0 %}
+                    <td>Empty</td>
+                    <td>None</td>
+                    {% endif %} 
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+          {% if products.has_other_pages %}
+  <ul class="list-group list-group-horizontal">
+    {% if products.has_previous %}
+      <li class="list-group-item" ><a href="?page={{ products.previous_page_number }}&q={{ query }}">&laquo;</a></li>
+    {% else %}
+      <li class="list-group-item" ><span>&laquo;</span></li>
+    {% endif %}
+    {% for i in products.paginator.page_range %}
+      {% if products.number == i %}
+        <li class="list-group-item" ><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+      {% else %}
+        <li class="list-group-item" ><a href="?page={{ i }}&q={{ query }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+    {% if products.has_next %}
+      <li class="list-group-item" ><a href="?page={{ products.next_page_number }}&q={{ query }}">&raquo;</a></li>
+    {% else %}
+      <li class="list-group-item" ><span>&raquo;</span></li>
+    {% endif %}
+  </ul>
+{% endif %}
+
+
+
+
+
+
+
+
+
+        <table class="table bg-white">
+          Proforma's products, <b>total = {{ proforma_total }}, total after discount = {{total_after_discount}} </b>
+            <thead class="bg-info text-white">
+                <tr>
+                    <th scope="col">Product x Qtty </th>
+                    <th scope ="col">Unit price</th>
+                    <th scope="col">Total</th>
+                    <th scope ="col">Return quantity</th>
+                    <th scope="col">Activity</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in proforma_product %}
+                {% if producto.Proforma.id == id_proforma and producto.Product %}
+                
+                <tr>
+                    <td>{{ producto.productName }} <b>x {{ producto.quantity }}</b></td>
+                    <td>{{ producto.price }}</td>
+                    <td><b><u>{{ producto.Total }}</u></b></td>
+                    <form action="{% url 'dashboard-proformas-edit-product-delete' id_proforma producto.id %}" method="GET">
+                    <td>
+                        <input class="form-control " name="quantity2" type="number" step="1"  min="1" max="{{ producto.quantity }}" id="input_value" placeholder="">
+                    </td>
+                    <td><input class="btn btn-danger btn-sm ml-2" type="submit" value="Return"> </td>
+                    </form >
+                </tr>               
+                {% endif %}
+                {% if producto.Proforma.id == id_proforma and producto.Product == NULL %}
+                <tr>
+                    <td>{{ producto.productName }} <b>x {{ producto.quantity }}</b></td>
+                    <td>{{ producto.price }}</td>
+                    <td><b><u>{{ producto.Total }}</u></b></td>
+                    <td>Product is removed from stock</td>
+                    
+                    <td>
+                        <a class="btn btn-danger btn-block" href="{% url 'dashboard-proformas-edit-product-finish' id_proforma producto.id %}" >Delete</a>
+                        
+                    </td>
+                </tr>   
+                {% endif  %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endblock %}

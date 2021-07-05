@@ -1,0 +1,53 @@
+{% extends 'partials/base.html' %} {% block title %}Invoices Page{% endblock %} {% load crispy_forms_tags %} 
+{% block content %} {% include 'partials/topside.html' %}
+<div class="row my-4">
+	<div class="col-md-4">
+		{% if messages %} {% for message in messages %}
+		<div class="alert alert-{{ message.tags }}">
+			{{ message }}
+		</div>
+		{% endfor %} {% endif %}
+		<div class="card card-body">
+			<h5>Add a new invoice</h5>
+			<hr>
+			<form method="POST">
+				{% csrf_token %} {{ form|crispy }}
+				<input class="btn btn-success btn-block" type="submit" value="Add">
+            </form>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <table class="table bg-white">
+            <thead class="bg-info text-white">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Client</th>
+                    <th scope="col">Payment Type</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Activity</th>
+                    <th scope="col"></th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoice %}
+                <tr>
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.name_backup }}</td>
+                    <td>{{ invoice.PaymentType }}</td>
+                   <td>{{ invoice.Total }} {{ invoice.currency }}</td>
+                    <td>
+                        <a class="btn btn-info btn-sm mr-2"
+                            href="{% url 'dashboard-invoices-edit-product' invoice.id %}">Edit</a>
+                    </td>
+                    <td>
+                      <a class="btn btn-danger btn-sm ml-2"
+                            href="{% url 'dashboard-invoices-delete' invoice.id %}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

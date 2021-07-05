@@ -1,0 +1,50 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-info bg-info">
+    <div class="container">
+        
+        <style>
+        .img2 {
+              -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+             filter: grayscale(100%);
+             }
+        </style>
+        <img class="img2" src="{% static '/img/Cheap solution logo.png' %}" alt="Cheap Solutions" style="width: 100%; max-width: 100px" />
+
+        <a class="navbar-brand text-white" href="{% url 'dashboard-index' %}">Cheap Solutions's Inventory</a>
+        {% if user.is_authenticated %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link text-white" href="{% url 'dashboard-index' %}">Dashboard <span
+                            class="sr-only">(current)</span></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link text-white" href="{% url 'user-profile' %}">{{ user.username }} Profile
+                        <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'user-logout' %}">Logout</a>
+                </li>
+            </ul>
+            {% else %}
+            <ul class="navbar-nav ml-auto">
+                <!--<li class="nav-item active">
+                    <a class="nav-link text-white" href="{% url 'user-register' %}">Register <span
+                            class="sr-only">(current)</span></a>
+                </li>-->
+                
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'user-login' %}">Login</a>
+                </li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>

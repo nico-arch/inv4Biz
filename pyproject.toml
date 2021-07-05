@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "repl_python3_beta_Django-Inventory-Management-System"
+version = "0.1.0"
+description = ""
+authors = ["NickAA <<>>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^3.2.3"
+django-crispy-forms = "^1.11.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
