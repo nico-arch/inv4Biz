@@ -14,6 +14,6 @@ admin.site.register(ProformaProduct)
 
 
 
-admin.site.site_header = "Haiti Solution Administration"
-admin.site.site_title  = "Haiti Solution"
+admin.site.site_header = "Cheap Solutions's Administration"
+admin.site.site_title  = "Cheap Solutions"
 admin.site.index_title = "Administration"
