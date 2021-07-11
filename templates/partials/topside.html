@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="row">
 
-                   
+
 
                     <div class="col-md-4">
                         <a class="text-decoration-none text-dark" href="{% url 'dashboard-products' %}">
@@ -42,7 +42,7 @@
                             </div>
                         </a>
                     </div>
-                     
+
                      <div class="col-md-4">
                         <a class="text-decoration-none text-dark" href="{% url 'dashboard-customers' %}">
                             <div class="card my-card shadow">
@@ -65,7 +65,27 @@
                         </a>
                     </div>
 
+                    <div class="col-md-4">
+                        <a class="text-decoration-none text-dark" href="{% url 'dashboard-proformas' %}">
+                            <div class="card my-card shadow">
+                                <div class="card-body text-center">
+                                    <h5>Sales order</h5>
+                                    <h3>{{ proforma_count }}</h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
 
+                    <div class="col-md-4">
+                        <a class="text-decoration-none text-dark" href="{% url 'dashboard-proformas' %}">
+                            <div class="card my-card shadow">
+                                <div class="card-body text-center">
+                                    <h5>Delivery</h5>
+                                    <h3>{{ proforma_count }}</h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
                     <div class="col-md-4">
                         <a class="text-decoration-none text-dark" href="{% url 'dashboard-invoices' %}">
                             <div class="card my-card shadow">

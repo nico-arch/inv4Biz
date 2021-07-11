@@ -17,8 +17,9 @@ class CategoryForm(forms.ModelForm):
 class InvoiceForm(forms.ModelForm):
   class Meta:
     model = Invoice
-    fields = ['client', 
-                  'PaymentType', 
+    fields = ['client',
+                  'PoNumber',
+                  'PaymentType',
                   #'PaymentAmount',
                   'discount',
                   'currency',
@@ -26,7 +27,7 @@ class InvoiceForm(forms.ModelForm):
                   'email_backup',
                   'phone_backup',
                   'address_backup',]
-                  
+
   def __init__(self, *args, **kwargs):
     super(InvoiceForm, self).__init__(*args, **kwargs)
     for field in self.fields:
@@ -40,7 +41,7 @@ class InvoiceForm(forms.ModelForm):
 class ProformaForm(forms.ModelForm):
   class Meta:
     model = Proforma
-    fields = ['client', 
+    fields = ['client',
                   'discount',
                   'currency',
                   'name_backup',

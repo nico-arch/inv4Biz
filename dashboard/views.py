@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .decorators import auth_users, allowed_users
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q 
+from django.db.models import Q
 """"
 category = Category.objects.all()
 category_count = category.count()
@@ -134,7 +134,7 @@ def product_edit(request, pk):
             product = Product.objects.get(id=pk)
             product_in_invoice = InvoiceProduct.objects.all()
             product_in_proforma = ProformaProduct.objects.all()
-            
+
             #Update the product in the invoices and proformas
             for piin in product_in_invoice:
               if piin.Product == product:
@@ -282,7 +282,7 @@ def invoices(request):
         if request.POST.get("client"):
           custo = Customer.objects.get(id=int(request.POST.get("client")))
 
-          
+
           request.POST._mutable = True
           request.POST['name_backup'] = custo.name
           request.POST['email_backup'] = custo.email
@@ -291,12 +291,12 @@ def invoices(request):
 
           #messages.success(request, f'{custo.name}: inside post client')
           #form.save()
-          
+
           #if form.is_valid():
           #  form.save()
           #  messages.success(request, f'inside is valid after client')
           #  return redirect('dashboard-invoices')
-          
+
 
         if form.is_valid():
           form.save()
@@ -305,9 +305,9 @@ def invoices(request):
     else:
        #messages.success(request, f'inside else')
        form = InvoiceForm()
-      
-       
-      
+
+
+
 
     context = {
         'proforma':proforma,
@@ -353,13 +353,13 @@ def invoices_edit(request, pk):
 def invoices_edit_product(request, pk):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
-    
+
     invoice = Invoice.objects.all().order_by('-id',)
     invoice_product = InvoiceProduct.objects.all()
     invoice_count = invoice.count()
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
-    
+
     query = request.GET.get('q', '')
     if query == '':
       product = Product.objects.all()
@@ -371,7 +371,7 @@ def invoices_edit_product(request, pk):
 
     page = request.GET.get('page', 1)
     paginator = Paginator(product, 5)
-    
+
     try:
         productss = paginator.page(page)
     except PageNotAnInteger:
@@ -384,7 +384,7 @@ def invoices_edit_product(request, pk):
     customer_count = customer.count()
     order = Order.objects.all().order_by('-id',)
     order_count = order.count()
-    
+
     item = Invoice.objects.get(id=pk)
 
 
@@ -393,14 +393,14 @@ def invoices_edit_product(request, pk):
         if form.is_valid():
             form.save()
             if request.POST.get("client"):
-              #update the backup ith the proforma 
+              #update the backup ith the proforma
               custo = Customer.objects.get(id=int(request.POST.get("client")))
-              
+
               Invoice.objects.filter(id=pk).update(name_backup= custo.name)
               Invoice.objects.filter(id=pk).update(email_backup= custo.email)
               Invoice.objects.filter(id=pk).update(phone_backup= custo.phone)
               Invoice.objects.filter(id=pk).update(address_backup= custo.address)
-              
+
             #return redirect('dashboard-invoices')
     else:
         form = InvoiceForm(instance=item)
@@ -413,7 +413,7 @@ def invoices_edit_product(request, pk):
             invoice_total_amount = invoice_total_amount + product_in_invoice.Total
 
     Invoice.objects.filter(id=pk).update(Total= invoice_total_amount)
-    
+
     item2 = Invoice.objects.get(id=pk)
     total_after_discount = item2.Total - item2.discount
     context = {
@@ -429,7 +429,7 @@ def invoices_edit_product(request, pk):
         'invoice_count': invoice_count,
         'category': category,
         'category_count': category_count,
-        
+
         'products': productss,
         'customer_count': customer_count,
         'product_count': product_count,
@@ -440,11 +440,11 @@ def invoices_edit_product(request, pk):
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
-def invoices_edit_product_add(request, invoice_pk, product_pk):    
+def invoices_edit_product_add(request, invoice_pk, product_pk):
     item = Invoice.objects.get(id=invoice_pk)
-    
+
     selectedProduct = Product.objects.get(pk=product_pk)
-    
+
     quantityy = 0
     if request.GET.get('quantity') is  "" :#| request.GET.get('quantity') <= 0 :
       #quantityy = request.GET.get('quantity')
@@ -461,7 +461,7 @@ def invoices_edit_product_add(request, invoice_pk, product_pk):
         #product_in_invoice = InvoiceProduct.objects.get(productName=selectedProduct.name)
         product_in_invoice = InvoiceProduct.objects.get(Invoice__id=item.id, Product__id = selectedProduct.id)
         InvoiceProduct.objects.filter(Invoice__id=item.id, Product__id = selectedProduct.id).update(quantity= product_in_invoice.quantity + int(quantityy))
-        
+
         product_in_invoice2 = InvoiceProduct.objects.get(Invoice__id=item.id, Product__id = selectedProduct.id)
         InvoiceProduct.objects.filter(Invoice__id=item.id, Product__id = selectedProduct.id).update(Total= product_in_invoice2.quantity * product_in_invoice2.price)
       else:
@@ -470,8 +470,8 @@ def invoices_edit_product_add(request, invoice_pk, product_pk):
         total = selectedProduct.price * quantityy
         invoiceProduct = InvoiceProduct(id=None, Invoice=item,
         Product = selectedProduct,
-        productName=selectedProduct.name, 
-        quantity=  quantityy,#selectedProduct.quantity, 
+        productName=selectedProduct.name,
+        quantity=  quantityy,#selectedProduct.quantity,
         price = selectedProduct.price,
         Total = total)
 
@@ -479,7 +479,7 @@ def invoices_edit_product_add(request, invoice_pk, product_pk):
       return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
     else:
       quantityy = request.GET.get('quantity')
-   
+
     #Remove the quantity in the stock
     #Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
 
@@ -495,15 +495,15 @@ def invoices_edit_product_add(request, invoice_pk, product_pk):
       Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
       #Adding the product to the invoice
       total = selectedProduct.price * float(quantityy)
-      invoiceProduct = InvoiceProduct(id=None, Invoice=item, 
+      invoiceProduct = InvoiceProduct(id=None, Invoice=item,
       Product = selectedProduct,
-      productName=selectedProduct.name, 
-      quantity=  quantityy,#selectedProduct.quantity, 
+      productName=selectedProduct.name,
+      quantity=  quantityy,#selectedProduct.quantity,
       price = selectedProduct.price,
       Total = total)
 
       invoiceProduct.save()
-  
+
     return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
 
 
@@ -511,10 +511,10 @@ def invoices_edit_product_add(request, invoice_pk, product_pk):
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
-def invoices_edit_product_search(request, invoice_pk, invoice_product_pk):    
-    
+def invoices_edit_product_search(request, invoice_pk, invoice_product_pk):
+
     query = self.request.GET.get('q')
-    
+
     return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
 
 @login_required(login_url='user-login')
@@ -532,7 +532,7 @@ def invoices_edit_product_finish(request, invoice_pk, invoice_product_pk):
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
-def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):    
+def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
     #Get the selected product in the invoice
     productInvoice = InvoiceProduct.objects.get(id=invoice_product_pk)
 
@@ -555,7 +555,7 @@ def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
 
         invoiceproduct = InvoiceProduct.objects.get(id=invoice_product_pk)
         InvoiceProduct.objects.filter(id=invoice_product_pk).update(Total = invoiceproduct.quantity * invoiceproduct.price)
-        
+
 
     productInvoice2 = InvoiceProduct.objects.get(id=invoice_product_pk)
     if productInvoice2.quantity == 0:
@@ -565,8 +565,8 @@ def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
     return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
 
 
-  
-    
+
+
 
 
 
@@ -588,7 +588,7 @@ def invoices_printed(request, pk):
   #invoice = Invoice.objects.all()
   invoice_product = InvoiceProduct.objects.all()
   invoice_to_be_printed = Invoice.objects.get(id=pk)
-  
+
   total_after_discount = invoice_to_be_printed.Total - invoice_to_be_printed.discount
 
   context = {
@@ -627,7 +627,7 @@ def proformas(request):
         if request.POST.get("client"):
           custo = Customer.objects.get(id=int(request.POST.get("client")))
 
-          
+
           request.POST._mutable = True
           request.POST['name_backup'] = custo.name
           request.POST['email_backup'] = custo.email
@@ -636,12 +636,12 @@ def proformas(request):
 
           #messages.success(request, f'{custo.name}: inside post client')
           #form.save()
-          
+
           #if form.is_valid():
           #  form.save()
           #  messages.success(request, f'inside is valid after client')
           #  return redirect('dashboard-invoices')
-          
+
 
         if form.is_valid():
           form.save()
@@ -650,9 +650,9 @@ def proformas(request):
     else:
        #messages.success(request, f'inside else')
        form = ProformaForm()
-      
-       
-      
+
+
+
 
     context = {
         'proforma':proforma,
@@ -686,7 +686,7 @@ def proformas_edit_product(request, pk):
     invoice_count = invoice.count()
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
-    
+
     query = request.GET.get('q', '')
     if query == '':
       product = Product.objects.all()
@@ -698,7 +698,7 @@ def proformas_edit_product(request, pk):
 
     page = request.GET.get('page', 1)
     paginator = Paginator(product, 5)
-    
+
     try:
         productss = paginator.page(page)
     except PageNotAnInteger:
@@ -711,7 +711,7 @@ def proformas_edit_product(request, pk):
     customer_count = customer.count()
     order = Order.objects.all().order_by('-id',)
     order_count = order.count()
-    
+
     item = Proforma.objects.get(id=pk)
 
 
@@ -720,14 +720,14 @@ def proformas_edit_product(request, pk):
         if form.is_valid():
             form.save()
             if request.POST.get("client"):
-              #update the backup ith the proforma 
+              #update the backup ith the proforma
               custo = Customer.objects.get(id=int(request.POST.get("client")))
-              
+
               Proforma.objects.filter(id=pk).update(name_backup= custo.name)
               Proforma.objects.filter(id=pk).update(email_backup= custo.email)
               Proforma.objects.filter(id=pk).update(phone_backup= custo.phone)
               Proforma.objects.filter(id=pk).update(address_backup= custo.address)
-              
+
             #return redirect('dashboard-invoices')
     else:
         form = ProformaForm(instance=item)
@@ -740,7 +740,7 @@ def proformas_edit_product(request, pk):
             proforma_total_amount = proforma_total_amount + product_in_proforma.Total
 
     Proforma.objects.filter(id=pk).update(Total= proforma_total_amount)
-    
+
     item2 = Proforma.objects.get(id=pk)
     total_after_discount = item2.Total - item2.discount
     context = {
@@ -751,7 +751,7 @@ def proformas_edit_product(request, pk):
         'total_after_discount':total_after_discount,
         'proforma_total': proforma_total_amount,
         'id_proforma': pk,
-        
+
         'invoice_product':invoice_product,
         'form': form,
         'query':query,
@@ -759,7 +759,7 @@ def proformas_edit_product(request, pk):
         'invoice_count': invoice_count,
         'category': category,
         'category_count': category_count,
-        
+
         'products': productss,
         'customer_count': customer_count,
         'product_count': product_count,
@@ -770,11 +770,11 @@ def proformas_edit_product(request, pk):
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
-def proformas_edit_product_add(request, proforma_pk, product_pk):    
+def proformas_edit_product_add(request, proforma_pk, product_pk):
     item = Proforma.objects.get(id=proforma_pk)
-    
+
     selectedProduct = Product.objects.get(pk=product_pk)
-    
+
     quantityy = 0
     if request.GET.get('quantity') is  "" :#| request.GET.get('quantity') <= 0 :
       #quantityy = request.GET.get('quantity')
@@ -786,22 +786,26 @@ def proformas_edit_product_add(request, proforma_pk, product_pk):
 
 
       if ProformaProduct.objects.filter(Proforma__id=item.id, Product__id = selectedProduct.id).exists():
-        Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+        #Remove the quantity in the stock
+        #Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+
         #Modify the product in the invoice if the product exists in the invoice
         #product_in_invoice = InvoiceProduct.objects.get(productName=selectedProduct.name)
         product_in_proforma = ProformaProduct.objects.get(Proforma__id=item.id, Product__id = selectedProduct.id)
         ProformaProduct.objects.filter(Proforma__id=item.id, Product__id = selectedProduct.id).update(quantity= product_in_invoice.quantity + int(quantityy))
-        
+
         product_in_proforma2 = ProformaProduct.objects.get(Proforma__id=item.id, Product__id = selectedProduct.id)
         ProformaProduct.objects.filter(Proforma__id=item.id, Product__id = selectedProduct.id).update(Total= product_in_proforma2.quantity * product_in_proforma2.price)
       else:
-        Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+        #Remove the quantity in the stock
+        #Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+
         #Adding the product to the invoice
         total = selectedProduct.price * quantityy
         proformaProduct = ProformaProduct(id=None, Proforma=item,
         Product = selectedProduct,
-        productName=selectedProduct.name, 
-        quantity=  quantityy,#selectedProduct.quantity, 
+        productName=selectedProduct.name,
+        quantity=  quantityy,#selectedProduct.quantity,
         price = selectedProduct.price,
         Total = total)
 
@@ -809,12 +813,14 @@ def proformas_edit_product_add(request, proforma_pk, product_pk):
       return redirect('dashboard-proformas-edit-product', pk=proforma_pk)
     else:
       quantityy = request.GET.get('quantity')
-   
+
     #Remove the quantity in the stock
     #Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
 
     if ProformaProduct.objects.filter(Proforma__id=item.id, Product__id = selectedProduct.id).exists():
-      Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+      #Remove the quantity in the stock
+      #Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+
       #Modify the product in the invoice if the product exists in the Proforma
       product_in_proforma = ProformaProduct.objects.get(Proforma__id=item.id, Product__id = selectedProduct.id)
       ProformaProduct.objects.filter(Proforma__id=item.id, Product__id = selectedProduct.id).update(quantity= product_in_proforma.quantity + int(quantityy))
@@ -822,18 +828,20 @@ def proformas_edit_product_add(request, proforma_pk, product_pk):
       product_in_proforma2 = ProformaProduct.objects.get(Proforma__id=item.id, Product__id = selectedProduct.id)
       ProformaProduct.objects.filter(Proforma__id=item.id, Product__id = selectedProduct.id).update(Total= product_in_proforma2.quantity * product_in_proforma2.price)
     else:
-      Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+      #Remove the quantity in the stock
+      #Product.objects.filter(pk=product_pk).update(quantity=selectedProduct.quantity -int(quantityy))
+
       #Adding the product to the invoice
       total = selectedProduct.price * float(quantityy)
-      proformaProduct = ProformaProduct(id=None, Proforma=item, 
+      proformaProduct = ProformaProduct(id=None, Proforma=item,
       Product = selectedProduct,
-      productName=selectedProduct.name, 
-      quantity=  quantityy,#selectedProduct.quantity, 
+      productName=selectedProduct.name,
+      quantity=  quantityy,#selectedProduct.quantity,
       price = selectedProduct.price,
       Total = total)
 
       proformaProduct.save()
-  
+
     return redirect('dashboard-proformas-edit-product', pk=proforma_pk)
 
 
@@ -841,10 +849,10 @@ def proformas_edit_product_add(request, proforma_pk, product_pk):
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
-def proformas_edit_product_search(request, proforma_pk, proforma_product_pk):    
-    
+def proformas_edit_product_search(request, proforma_pk, proforma_product_pk):
+
     query = self.request.GET.get('q')
-    
+
     return redirect('dashboard-proformas-edit-product', pk=proforma_pk)
 
 @login_required(login_url='user-login')
@@ -862,7 +870,7 @@ def proformas_edit_product_finish(request, proforma_pk, proforma_product_pk):
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
-def proformas_edit_product_delete(request, proforma_pk, proforma_product_pk):    
+def proformas_edit_product_delete(request, proforma_pk, proforma_product_pk):
     #Get the selected product in the invoice
     productProforma = ProformaProduct.objects.get(id=proforma_product_pk)
 
@@ -871,7 +879,10 @@ def proformas_edit_product_delete(request, proforma_pk, proforma_product_pk):
       if Product.objects.filter(name=productProforma.productName).exists():
         #Modify the product in the invoice if the product exists in the invoice
         product = Product.objects.get(name=productProforma.productName)
-        Product.objects.filter(name=productProforma.productName).update(quantity= product.quantity + productProforma.quantity)
+
+        #Product cannot be returned in stock
+        #Product.objects.filter(name=productProforma.productName).update(quantity= product.quantity + productProforma.quantity)
+
         productProforma.delete()
         return redirect('dashboard-proformas-edit-product', pk=proforma_pk)
     else:
@@ -880,12 +891,16 @@ def proformas_edit_product_delete(request, proforma_pk, proforma_product_pk):
       if Product.objects.filter(name=productProforma.productName).exists():
         #Modify the product in the invoice if the product exists in the invoice
         product = Product.objects.get(name=productProforma.productName)
-        Product.objects.filter(name=productProforma.productName).update(quantity= product.quantity + int(quantityy))
+
+        #Product cannot be returned in stock
+        #Product.objects.filter(name=productProforma.productName).update(quantity= product.quantity + int(quantityy))
+
+
         ProformaProduct.objects.filter(id=proforma_product_pk).update(quantity = productProforma.quantity - int(quantityy))
 
         proformaproduct = ProformaProduct.objects.get(id=proforma_product_pk)
         ProformaProduct.objects.filter(id=proforma_product_pk).update(Total = proformaproduct.quantity * proformaproduct.price)
-        
+
 
     productProforma2 = ProformaProduct.objects.get(id=proforma_product_pk)
     if productProforma2.quantity == 0:
@@ -895,8 +910,8 @@ def proformas_edit_product_delete(request, proforma_pk, proforma_product_pk):
     return redirect('dashboard-proformas-edit-product', pk=proforma_pk)
 
 
-  
-    
+
+
 
 
 
@@ -918,7 +933,7 @@ def proformas_printed(request, pk):
   #invoice = Invoice.objects.all()
   proforma_product = ProformaProduct.objects.all()
   proforma_to_be_printed = Proforma.objects.get(id=pk)
-  
+
   total_after_discount = proforma_to_be_printed.Total - proforma_to_be_printed.discount
 
   context = {
@@ -952,7 +967,7 @@ def customers(request):
 
     customer = Customer.objects.all()
     customer_count = customer.count()
-    
+
     if request.method == 'POST':
        form = CustomerForm(request.POST)
        if form.is_valid():
@@ -962,7 +977,7 @@ def customers(request):
           return redirect('dashboard-customers')
     else:
         form = CustomerForm()
-        
+
     context = {
         'proforma':proforma,
         'proforma_count':proforma_count,
@@ -1001,7 +1016,7 @@ def customers_edit(request, pk):
           profo.email_backup = form.cleaned_data.get("email")
           profo.phone_backup = form.cleaned_data.get("phone")
           profo.address_backup = form.cleaned_data.get("address")
-          profo.save()    
+          profo.save()
       form.save()
       return redirect('dashboard-customers')
 

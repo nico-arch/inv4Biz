@@ -86,13 +86,14 @@ class Invoice(models.Model):
     phone_backup = models.PositiveIntegerField(null=True)
     address_backup = models.CharField(max_length=500, null=True )
 
+    PoNumber = models.IntegerField('P.O Number',null=True)
     PaymentType = models.CharField('Payment Type',
                                    max_length=50,
                                    choices=Payment_Type,
                                    null=True)
     #PaymentAmount = models.FloatField('Payment Amount', null=True)
     #Balance = models.FloatField(null=True)
-    
+
     Date   = models.DateTimeField('Date',
                               default=datetime.now, blank=True
                               #default=timezone.now,
@@ -116,7 +117,7 @@ class InvoiceProduct(models.Model):
     quantity = models.PositiveIntegerField(null=True)
     price = models.FloatField(null=True)
     Total = models.FloatField(null=True)
-    
+
     def __str__(self):
         return 'Product in invoice : {0}'.format(self.Invoice.id)
 
@@ -129,8 +130,8 @@ class Proforma(models.Model):
     phone_backup = models.PositiveIntegerField(null=True)
     address_backup = models.CharField(max_length=500, null=True )
 
-    
-    
+
+
     Date   = models.DateTimeField('Date',
                               default=datetime.now, blank=True)
     Total = models.FloatField(null=True, default = 0.0)
@@ -150,7 +151,7 @@ class ProformaProduct(models.Model):
     quantity = models.PositiveIntegerField(null=True)
     price = models.FloatField(null=True)
     Total = models.FloatField(null=True)
-    
+
     def __str__(self):
         return 'Product in Proforma : {0}'.format(self.Proforma.id)
 
