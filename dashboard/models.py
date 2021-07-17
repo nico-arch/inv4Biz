@@ -115,11 +115,165 @@ class InvoiceProduct(models.Model):
 
     productName = models.CharField(max_length=500,  null=True)
     quantity = models.PositiveIntegerField(null=True)
+    dueQuantity = models.PositiveIntegerField('Due Qtty', null=True)
     price = models.FloatField(null=True)
     Total = models.FloatField(null=True)
 
     def __str__(self):
         return 'Product in invoice : {0}'.format(self.Invoice.id)
+
+
+class InvoiceDeposit(models.Model):
+    Invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True)
+
+    Amount = models.PositiveIntegerField(null=True)
+    Date   = models.DateTimeField('Date',
+                              default=datetime.now, blank=True
+                              #default=timezone.now,
+                              #null= False,
+                              #blank=False
+                              )
+
+    def __str__(self):
+        return 'Deposit of : {0}'.format(self.Date)
+
+
+class Salesorder(models.Model):
+    #info = models.JSONField(null=True)
+    #example of multiple objects: [{"name": "T-shirt", "category": "Clothe", "quantity": 2, "price": 6.1}, {"name": "T-shirt2", "category": "Clothe2", "quantity": 22, "price": 6.12}]
+    #Total = models.FloatField()
+    #
+    #client = models.CharField('Client', max_length=300, null=True)
+    client = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    name_backup = models.CharField(max_length=500, null = True)
+    email_backup = models.EmailField(max_length=254, null=True)
+    phone_backup = models.PositiveIntegerField(null=True)
+    address_backup = models.CharField(max_length=500, null=True )
+
+    PoNumber = models.IntegerField('P.O Number',null=True)
+    PaymentType = models.CharField('Payment Type',
+                                   max_length=50,
+                                   choices=Payment_Type,
+                                   null=True)
+    #PaymentAmount = models.FloatField('Payment Amount', null=True)
+    #Balance = models.FloatField(null=True)
+
+    Date   = models.DateTimeField('Date',
+                              default=datetime.now, blank=True
+                              #default=timezone.now,
+                              #null= False,
+                              #blank=False
+                              )
+    Total = models.FloatField(null=True, default = 0.0)
+    discount = models.FloatField('Discount',null=True, default = 0.0)
+    currency = models.CharField(max_length=50, choices=Currency_Category,default='HTG',null=True)
+    class Meta:
+        ordering = ('Date',)
+    def __str__(self):
+        return 'Sales order : {0}'.format(self.id)
+
+
+class SalesorderProduct(models.Model):
+    Salesorder = models.ForeignKey(Salesorder, on_delete=models.CASCADE, null=True)
+    Product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+
+    productName = models.CharField(max_length=500,  null=True)
+    quantity = models.PositiveIntegerField(null=True)
+    dueQuantity = models.PositiveIntegerField('Due Qtty', null=True)
+    price = models.FloatField(null=True)
+    Total = models.FloatField(null=True)
+
+    def __str__(self):
+        return 'Product in Sales order : {0}'.format(self.Salesorder.id)
+
+
+class SalesorderDeposit(models.Model):
+    Salesorder = models.ForeignKey(Salesorder, on_delete=models.CASCADE, null=True)
+
+    Amount = models.PositiveIntegerField(null=True)
+    Date   = models.DateTimeField('Date',
+                              default=datetime.now, blank=True
+                              #default=timezone.now,
+                              #null= False,
+                              #blank=False
+                              )
+
+    def __str__(self):
+        return 'Deposit of : {0}'.format(self.Date)
+
+
+
+class Delivery(models.Model):
+    #info = models.JSONField(null=True)
+    #example of multiple objects: [{"name": "T-shirt", "category": "Clothe", "quantity": 2, "price": 6.1}, {"name": "T-shirt2", "category": "Clothe2", "quantity": 22, "price": 6.12}]
+    #Total = models.FloatField()
+    #
+    #client = models.CharField('Client', max_length=300, null=True)
+    client = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
+    name_backup = models.CharField(max_length=500, null = True)
+    email_backup = models.EmailField(max_length=254, null=True)
+    phone_backup = models.PositiveIntegerField(null=True)
+    address_backup = models.CharField(max_length=500, null=True )
+
+    PoNumber = models.IntegerField('P.O Number',null=True)
+    PaymentType = models.CharField('Payment Type',
+                                   max_length=50,
+                                   choices=Payment_Type,
+                                   null=True)
+    #PaymentAmount = models.FloatField('Payment Amount', null=True)
+    #Balance = models.FloatField(null=True)
+
+    Date   = models.DateTimeField('Date',
+                              default=datetime.now, blank=True
+                              #default=timezone.now,
+                              #null= False,
+                              #blank=False
+                              )
+    Total = models.FloatField(null=True, default = 0.0)
+    discount = models.FloatField('Discount',null=True, default = 0.0)
+    currency = models.CharField(max_length=50, choices=Currency_Category,default='HTG',null=True)
+    class Meta:
+        ordering = ('Date',)
+    def __str__(self):
+        return 'Delivery : {0}'.format(self.id)
+
+
+class DeliveryProduct(models.Model):
+    Delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, null=True)
+    Product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+
+    productName = models.CharField(max_length=500,  null=True)
+    quantity = models.PositiveIntegerField(null=True)
+    dueQuantity = models.PositiveIntegerField('Due Qtty', null=True)
+    price = models.FloatField(null=True)
+    Total = models.FloatField(null=True)
+
+    def __str__(self):
+        return 'Product in Delivery : {0}'.format(self.Delivery.id)
+
+
+
+
+
+class DeliveryDeposit(models.Model):
+    Delivery = models.ForeignKey(Delivery, on_delete=models.CASCADE, null=True)
+
+    Amount = models.PositiveIntegerField(null=True)
+    Date   = models.DateTimeField('Date',
+                              default=datetime.now, blank=True
+                              #default=timezone.now,
+                              #null= False,
+                              #blank=False
+                              )
+
+    def __str__(self):
+        return 'Deposit of : {0}'.format(self.Date)
+
+
+
+
+
+
 
 
 

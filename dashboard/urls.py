@@ -5,7 +5,7 @@ urlpatterns = [
     path('index/', views.index, name='dashboard-index'),
 
 
-# Product 
+# Product
     path('products/', views.products, name='dashboard-products'),
     path('products/delete/<int:pk>/', views.product_delete, name='dashboard-products-delete'),
     path('products/detail/<int:pk>/', views.product_detail, name='dashboard-products-detail'),
@@ -17,9 +17,12 @@ urlpatterns = [
     path('products-category/delete/<int:pk>/', views.product_category_delete, name='dashboard-products-category-delete'),
     path('products-category/detail/<int:pk>/', views.product_category_detail, name='dashboard-products-category-detail'),
     path('products-category/edit/<int:pk>/',   views.product_category_edit,   name='dashboard-products-category-edit'),
-   
 
-# Invoice 
+# Deposit
+    #path('deliveries/deposit/show/<int:pk>/', views.deliveries_deposit_show, name='dashboard--delivery-deposit-show'),
+    #path('salesorders/deposit/show/<int:pk>/', views.salesorders_deposit_show, name='dashboard-salesorder-deposit-show'),
+
+# Invoice
     path('invoices/', views.invoices, name='dashboard-invoices'),
     path('invoices/delete/<int:pk>/', views.invoices_delete, name='dashboard-invoices-delete'),
     path('invoices/detail/<int:pk>/', views.invoices_detail, name='dashboard-invoices-detail'),
@@ -29,8 +32,9 @@ urlpatterns = [
     path('invoices/invoice/delete_product/<int:invoice_pk>/<int:invoice_product_pk>', views.invoices_edit_product_delete,   name='dashboard-invoices-edit-product-delete'),
     path('invoices/invoice/delete_product2/<int:invoice_pk>/<int:invoice_product_pk>', views.invoices_edit_product_finish,   name='dashboard-invoices-edit-product-finish'),
     path('invoices/invoice/printed/<int:pk>/', views.invoices_printed,   name='dashboard-invoices-printed'),
+    path('invoices/deposit/show/<int:pk>/', views.invoices_deposit_show, name='dashboard-invoices-deposit-show'),
 
-# Proforma 
+# Proforma
     path('proformas/', views.proformas, name='dashboard-proformas'),
     path('proformas/delete/<int:pk>/', views.proformas_delete, name='dashboard-proformas-delete'),
     #path('proformas/detail/<int:pk>/', views.invoices_detail, name='dashboard-proformas-detail'),

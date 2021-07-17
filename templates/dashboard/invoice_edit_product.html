@@ -1,5 +1,5 @@
 {% extends 'partials/base.html' %} {% block title %}Invoices Page
-{% endblock %} {% load crispy_forms_tags %} {% block content %} 
+{% endblock %} {% load crispy_forms_tags %} {% block content %}
 {% include 'partials/topside.html' %}
 <div class="row my-4">
 	<div class="col-md-4">
@@ -14,10 +14,10 @@
 			<form method="POST">
 				{% csrf_token %} {{ form|crispy }}
 				<input class="btn btn-success btn-block" type="submit" value="Add">
-
+         <a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-deposit-show' id_invoice %}">Deposit</a>
          {% if invoice_total > 0 %}
          <a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-printed' id_invoice %}" target="_blank">Print</a>
-         {% endif %} 
+         {% endif %}
 
       </form>
         </div>
@@ -36,7 +36,7 @@
                     <th scope="col">Available</th>
                     <th scope ="col">Quantity</th>
                     <th scope="col">Activity</th>
-                    
+
                 </tr>
             </thead>
             <tbody>
@@ -51,16 +51,16 @@
                     <td>
                         <input class="form-control " name="quantity" type="number" step="1"  min="1" max="{{ product.quantity }}" id="input_value" placeholder="">
                     </td>
-                    <td> 
+                    <td>
                       <input class="btn btn-success btn-block" type="submit" value="Add">
-                          
+
                     </td>
                     </form>
-                    {% endif %} 
+                    {% endif %}
                     {% if product.quantity == 0 %}
                     <td>Empty</td>
                     <td>None</td>
-                    {% endif %} 
+                    {% endif %}
                 </tr>
                 {% endfor %}
 
@@ -105,13 +105,13 @@
                     <th scope="col">Total</th>
                     <th scope ="col">Return quantity</th>
                     <th scope="col">Activity</th>
-                    
+
                 </tr>
             </thead>
             <tbody>
                 {% for producto in invoice_product %}
                 {% if producto.Invoice.id == id_invoice and producto.Product %}
-                
+
                 <tr>
                     <td>{{ producto.productName }} <b>x {{ producto.quantity }}</b></td>
                     <td>{{ producto.price }}</td>
@@ -122,7 +122,7 @@
                     </td>
                     <td><input class="btn btn-danger btn-sm ml-2" type="submit" value="Return"> </td>
                     </form >
-                </tr>               
+                </tr>
                 {% endif %}
                 {% if producto.Invoice.id == id_invoice and producto.Product == NULL %}
                 <tr>
@@ -130,12 +130,12 @@
                     <td>{{ producto.price }}</td>
                     <td><b><u>{{ producto.Total }}</u></b></td>
                     <td>Product is removed from stock</td>
-                    
+
                     <td>
                         <a class="btn btn-danger btn-block" href="{% url 'dashboard-invoices-edit-product-finish' id_invoice  producto.id %}" >Delete</a>
-                        
+
                     </td>
-                </tr>   
+                </tr>
                 {% endif  %}
                 {% endfor %}
             </tbody>

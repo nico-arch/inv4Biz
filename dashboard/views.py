@@ -598,6 +598,33 @@ def invoices_printed(request, pk):
             }
   return render(request, 'dashboard/invoice_printed.html', context)
 
+# Deposit
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_deposit_show(request, pk):
+  #invoice = Invoice.objects.all()
+  invoice_deposit = InvoiceDeposit.objects.all()
+  invoice_to_be_printed = Invoice.objects.get(id=pk)
+
+  context = {
+            'invoice': invoice_to_be_printed,
+            'invoice_deposit': invoice_deposit
+            }
+  return render(request, 'dashboard/invoice_deposit.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #################################################
 # Proforma
