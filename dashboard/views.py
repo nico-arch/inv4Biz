@@ -567,10 +567,6 @@ def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
 
 
 
-
-
-
-
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
 def invoices_delete(request, pk):
@@ -603,7 +599,7 @@ def invoices_printed(request, pk):
 @allowed_users(allowed_roles=['Admin'])
 def invoices_deposit_show(request, pk):
   #invoice = Invoice.objects.all()
-  invoice_deposit = InvoiceDeposit.objects.all()
+  invoice_deposit = InvoiceDeposit.objects.all().order_by('-id',)
   invoice_to_be_printed = Invoice.objects.get(id=pk)
 
   context = {
@@ -613,6 +609,27 @@ def invoices_deposit_show(request, pk):
   return render(request, 'dashboard/invoice_deposit.html', context)
 
 
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_deposit_add(request, pk):
+    invoice_to_be_printed = Invoice.objects.get(id=pk)
+
+    if request.method == 'POST':
+
+        if request.POST.get("amount") == '':
+            return redirect('dashboard-invoices-deposit-show', pk=pk)
+
+        if int( request.POST.get("amount") ) > 0:
+            amount = int( request.POST.get("amount") )
+
+            invoiceDeposit = InvoiceDeposit(id=None,
+                            Invoice=invoice_to_be_printed,
+                            Amount = amount,
+                            )
+
+            invoiceDeposit.save()
+
+    return redirect('dashboard-invoices-deposit-show', pk=pk)
 
 
 
