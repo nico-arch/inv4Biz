@@ -13,8 +13,8 @@
 			<hr>
 			<form method="POST">
 				{% csrf_token %} {{ form|crispy }}
-				<input class="btn btn-success btn-block" type="submit" value="Add">
-         <a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-deposit-show' id_invoice %}">Deposit</a>
+				<input class="btn btn-success btn-block" type="submit" value="Save">
+				<a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-deposit-show' id_invoice %}">Deposit history</a>
          {% if invoice_total > 0 %}
          <a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-printed' id_invoice %}" target="_blank">Print</a>
          {% endif %}
@@ -97,7 +97,7 @@
 
 
         <table class="table bg-white">
-          Invoice's products, <b>total = {{ invoice_total }}, total after discount = {{total_after_discount}} </b>
+          Invoice's products, <b>total = {{ invoice_total }}, total after discount = {{total_after_discount}}, balance = {{balance}} </b>
             <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">Product x Qtty </th>

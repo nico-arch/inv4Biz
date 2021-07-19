@@ -12,20 +12,23 @@
         <table class="table table-hover table-sm bg-white search-table" >
             <thead class="bg-info text-white">
                 <tr>
-                    <th scope ="col"></th>
-                    <th scope="col"></th>
+                    <th scope ="col">Balance = </th>
+                    <th scope="col">{{balance}} {{invoice.currency}}</th>
                 </tr>
             </thead>
+
             <tbody>
+                 {% if balance > 0 %}
                     <form class="" action="{% url 'dashboard-invoices-deposit-add' invoice.id %}" method="POST">
                       {% csrf_token %}
                       <tr>
                            <td>
-                             <input class="form-control " name="amount" type="number" step="1"  min="1" max="1000" id="input_value" placeholder="Amount">
+                             <input class="form-control " name="amount" type="number" step="0.01"  min="0" max="{{balance}}" id="input_value" placeholder="Amount">
                            </td>
                            <td><input class="btn btn-success btn-block" type="submit" value="Add"></td>
                        </tr>
                     </form>
+                    {% endif %}
             </tbody>
         </table>
 
@@ -43,10 +46,16 @@
                {% if deposit.Invoice.id == invoice.id %}
                 <tr>
                     <td>{{ deposit.Invoice }}</td>
-                    <td>{{ deposit.Amount }}</td>
+                    <td>{{ deposit.Amount }} {{ deposit.Invoice.currency }}</td>
                     <td>{{ deposit.Date }}</td>
+
+                      <form action = "{% url 'dashboard-invoices-deposit-delete' deposit.id invoice.id %}" method="POST">
+                        {% csrf_token %}
                     <td>
+                      <input class="btn btn-danger btn-sm ml-2" type="submit" value="Delete">
                     </td>
+                     </form >
+
                 </tr>
                 {% endif %}
                 {% endfor %}

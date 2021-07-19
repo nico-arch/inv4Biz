@@ -417,6 +417,7 @@ def invoices_edit_product(request, pk):
     item2 = Invoice.objects.get(id=pk)
     total_after_discount = item2.Total - item2.discount
     context = {
+        'balance': item2.Balance,
         'proforma':proforma,
         'proforma_count':proforma_count,
         'total_after_discount':total_after_discount,
@@ -602,7 +603,17 @@ def invoices_deposit_show(request, pk):
   invoice_deposit = InvoiceDeposit.objects.all().order_by('-id',)
   invoice_to_be_printed = Invoice.objects.get(id=pk)
 
+  amountPaid = 0.0
+  for deposit in invoice_deposit:
+      if deposit.Invoice.id == pk:
+          amountPaid += float(deposit.Amount)
+
+  total_after_discount = float(invoice_to_be_printed.Total - invoice_to_be_printed.discount)
+  balance = float(total_after_discount - amountPaid)
+  Invoice.objects.filter(id=pk).update(Balance = balance)
+
   context = {
+            'balance': balance,
             'invoice': invoice_to_be_printed,
             'invoice_deposit': invoice_deposit
             }
@@ -619,8 +630,8 @@ def invoices_deposit_add(request, pk):
         if request.POST.get("amount") == '':
             return redirect('dashboard-invoices-deposit-show', pk=pk)
 
-        if int( request.POST.get("amount") ) > 0:
-            amount = int( request.POST.get("amount") )
+        if float( request.POST.get("amount") ) > 0.0:
+            amount = float( request.POST.get("amount") )
 
             invoiceDeposit = InvoiceDeposit(id=None,
                             Invoice=invoice_to_be_printed,
@@ -631,6 +642,18 @@ def invoices_deposit_add(request, pk):
 
     return redirect('dashboard-invoices-deposit-show', pk=pk)
 
+
+
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_deposit_delete(request, deposit_pk, invoice_pk):
+    deposit = InvoiceDeposit.objects.get(id=deposit_pk)
+
+    if request.method == 'POST':
+        deposit.delete()
+        return redirect('dashboard-invoices-deposit-show', pk = invoice_pk)
+
+    return redirect('dashboard-invoices-deposit-show', pk = invoice_pk)
 
 
 

@@ -102,6 +102,7 @@ class Invoice(models.Model):
                               )
     Total = models.FloatField(null=True, default = 0.0)
     discount = models.FloatField('Discount',null=True, default = 0.0)
+    Balance = models.FloatField(null=True)
     currency = models.CharField(max_length=50, choices=Currency_Category,default='HTG',null=True)
     class Meta:
         ordering = ('Date',)
@@ -126,7 +127,7 @@ class InvoiceProduct(models.Model):
 class InvoiceDeposit(models.Model):
     Invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True)
 
-    Amount = models.PositiveIntegerField(null=True)
+    Amount = models.FloatField(null=True)
     Date   = models.DateTimeField('Date',
                               default=datetime.now, blank=True
                               #default=timezone.now,

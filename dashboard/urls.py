@@ -34,7 +34,7 @@ urlpatterns = [
     path('invoices/invoice/printed/<int:pk>/', views.invoices_printed,   name='dashboard-invoices-printed'),
     path('invoices/deposit/show/<int:pk>/', views.invoices_deposit_show, name='dashboard-invoices-deposit-show'),
     path('invoices/deposit/add/<int:pk>/', views.invoices_deposit_add, name='dashboard-invoices-deposit-add'),
-    #path('invoices/deposit/show/<int:pk>/', views.invoices_deposit_show, name='dashboard-invoices-deposit-delete'),
+    path('invoices/deposit/delete/<int:deposit_pk>/<int:invoice_pk>/', views.invoices_deposit_delete, name='dashboard-invoices-deposit-delete'),
 
 # Proforma
     path('proformas/', views.proformas, name='dashboard-proformas'),
