@@ -14,6 +14,8 @@ class Customer(models.Model):
     email = models.EmailField(max_length=254, null=True, default = 'default@default.com')
     phone = models.PositiveIntegerField(null=True, default = 0)
     address = models.CharField(max_length=500, default ='--------', null =True)
+    Funds = models.FloatField(null=True, default = 0.0)
+
     #info = models.JSONField()
 
     def __str__(self):
@@ -269,12 +271,6 @@ class DeliveryDeposit(models.Model):
 
     def __str__(self):
         return 'Deposit of : {0}'.format(self.Date)
-
-
-
-
-
-
 
 
 

@@ -417,6 +417,7 @@ def invoices_edit_product(request, pk):
     item2 = Invoice.objects.get(id=pk)
     total_after_discount = item2.Total - item2.discount
     context = {
+        'client_funds': item2.client.Funds,
         'balance': item2.Balance,
         'proforma':proforma,
         'proforma_count':proforma_count,

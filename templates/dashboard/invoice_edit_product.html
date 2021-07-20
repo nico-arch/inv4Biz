@@ -10,6 +10,7 @@
 		{% endfor %} {% endif %}
 		<div class="card card-body">
 			<h5>Invoice No: {{ id_invoice }}, Total: {{ invoice_total }}</h5>
+			<h5>Client's funds: {{client_funds}}</h5>
 			<hr>
 			<form method="POST">
 				{% csrf_token %} {{ form|crispy }}
@@ -53,7 +54,6 @@
                     </td>
                     <td>
                       <input class="btn btn-success btn-block" type="submit" value="Add">
-
                     </td>
                     </form>
                     {% endif %}
@@ -89,18 +89,12 @@
 {% endif %}
 
 
-
-
-
-
-
-
-
         <table class="table bg-white">
           Invoice's products, <b>total = {{ invoice_total }}, total after discount = {{total_after_discount}}, balance = {{balance}} </b>
             <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">Product x Qtty </th>
+										<th scope="col">Due Qtty </th>
                     <th scope ="col">Unit price</th>
                     <th scope="col">Total</th>
                     <th scope ="col">Return quantity</th>
@@ -114,6 +108,7 @@
 
                 <tr>
                     <td>{{ producto.productName }} <b>x {{ producto.quantity }}</b></td>
+										<td>{{ producto.dueQuantity }}</td>
                     <td>{{ producto.price }}</td>
                     <td><b><u>{{ producto.Total }}</u></b></td>
                     <form action="{% url 'dashboard-invoices-edit-product-delete' id_invoice producto.id %}" method="GET">
