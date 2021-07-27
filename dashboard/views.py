@@ -518,19 +518,7 @@ def invoices_edit_product_search(request, invoice_pk, invoice_product_pk):
     query = self.request.GET.get('q')
 
     return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
-
-@login_required(login_url='user-login')
-@allowed_users(allowed_roles=['Admin'])
-def invoices_edit_product_finish(request, invoice_pk, invoice_product_pk):
-  #Get the selected product in the invoice
-  productInvoice = InvoiceProduct.objects.get(id=invoice_product_pk)
-  #productInvoice.price = 0.0;
-  #productInvoice.save()
-  productInvoice.delete()
-  return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
-  #return redirect('dashboard-index')
-
-
+ 
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
@@ -565,6 +553,22 @@ def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
       productInvoice2.delete()
 
     return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
+
+
+
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_edit_product_finish(request, invoice_pk, invoice_product_pk):
+  #Get the selected product in the invoice
+  productInvoice = InvoiceProduct.objects.get(id=invoice_product_pk)
+  #productInvoice.price = 0.0;
+  #productInvoice.save()
+  productInvoice.delete()
+  return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
+  #return redirect('dashboard-index')
+
+
+
 
 
 

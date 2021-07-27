@@ -99,6 +99,8 @@
                     <th scope="col">Total</th>
                     <th scope ="col">Return quantity</th>
                     <th scope="col">Activity</th>
+										<th scope ="col">Return Due</th>
+                    <th scope="col">Activity</th>
 
                 </tr>
             </thead>
@@ -113,10 +115,18 @@
                     <td><b><u>{{ producto.Total }}</u></b></td>
                     <form action="{% url 'dashboard-invoices-edit-product-delete' id_invoice producto.id %}" method="GET">
                     <td>
-                        <input class="form-control " name="quantity2" type="number" step="1"  min="1" max="{{ producto.quantity }}" id="input_value" placeholder="">
+                        <input class="form-control" name="quantity2" type="number" step="1"  min="1" max="{{ producto.quantity }}" id="input_value" placeholder="">
                     </td>
                     <td><input class="btn btn-danger btn-sm ml-2" type="submit" value="Return"> </td>
                     </form >
+
+										<form action="" method="GET">
+											<td>
+	                        <input class="form-control" name="quantity3" type="number" step="1"  min="1" max="{{ producto.dueQuantity }}" id="input_value" placeholder="">
+	                    </td>
+	                    <td><input class="btn btn-danger btn-sm ml-2" type="submit" value="Delete"></td>
+										</form >
+
                 </tr>
                 {% endif %}
                 {% if producto.Invoice.id == id_invoice and producto.Product == NULL %}

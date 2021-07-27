@@ -118,7 +118,7 @@ class InvoiceProduct(models.Model):
 
     productName = models.CharField(max_length=500,  null=True)
     quantity = models.PositiveIntegerField(null=True)
-    dueQuantity = models.PositiveIntegerField('Due Qtty', null=True)
+    dueQuantity = models.PositiveIntegerField('Due Qtty', default=0, null=True)
     price = models.FloatField(null=True)
     Total = models.FloatField(null=True)
 
