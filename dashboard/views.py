@@ -30,8 +30,25 @@ def index(request):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
 
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all()
     category_count = category.count()
@@ -54,6 +71,9 @@ def index(request):
     else:
         form = OrderForm()
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+        
         'proforma':proforma,
         'proforma_count':proforma_count,
         'invoice': invoice,
@@ -77,8 +97,25 @@ def products(request):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
 
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all()
     category_count = category.count()
@@ -102,6 +139,9 @@ def products(request):
     else:
         form = ProductForm()
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proformas_delete,
         'proforma_count':proforma_count,
         'invoice': invoice,
@@ -181,8 +221,25 @@ def products_category(request):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
 
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all().order_by('name',)
     category_count = category.count()
@@ -207,6 +264,9 @@ def products_category(request):
         form = CategoryForm()
 
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'invoice': invoice,
@@ -263,8 +323,26 @@ def invoices(request):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
 
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
+
 
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
@@ -288,7 +366,7 @@ def invoices(request):
           request.POST['email_backup'] = custo.email
           request.POST['phone_backup'] = custo.phone
           request.POST['address_backup'] = custo.address
-
+          request.POST['Type'] = "Invoice"
           #messages.success(request, f'{custo.name}: inside post client')
           #form.save()
 
@@ -308,6 +386,9 @@ def invoices(request):
 
 
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'invoice': invoice,
@@ -321,6 +402,179 @@ def invoices(request):
         'order_count': order_count,
     }
     return render(request, 'dashboard/invoice.html', context)
+
+#Invoices_salesorder
+@login_required(login_url='user-login')
+def invoices_salesorder(request):
+    """"""
+    proforma = Proforma.objects.all().order_by('-id',)
+    proforma_count = proforma.count()
+
+    invoice_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
+
+    category = Category.objects.all().order_by('-id',)
+    category_count = category.count()
+
+    product = Product.objects.all().order_by('-id',)
+    product_count = product.count()
+    customer = Customer.objects.all()
+    customer_count = customer.count()
+    order = Order.objects.all().order_by('-id',)
+    order_count = order.count()
+    """"""
+
+    if request.method == 'POST':
+        form = InvoiceForm(request.POST)
+        if request.POST.get("client"):
+          custo = Customer.objects.get(id=int(request.POST.get("client")))
+
+
+          request.POST._mutable = True
+          request.POST['name_backup'] = custo.name
+          request.POST['email_backup'] = custo.email
+          request.POST['phone_backup'] = custo.phone
+          request.POST['address_backup'] = custo.address
+          request.POST['Type'] = "Sales Order"
+          #messages.success(request, f'{custo.name}: inside post client')
+          #form.save()
+
+          #if form.is_valid():
+          #  form.save()
+          #  messages.success(request, f'inside is valid after client')
+          #  return redirect('dashboard-invoices')
+
+
+        if form.is_valid():
+          form.save()
+          messages.success(request, f'A sales order has been added')
+          return redirect('dashboard-invoices-salesorder')
+    else:
+       #messages.success(request, f'inside else')
+       form = InvoiceForm()
+
+
+    context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
+        'proforma':proforma,
+        'proforma_count':proforma_count,
+        'invoice': invoice,
+        'invoice_count': invoice_count,
+        'category': category,
+        'category_count': category_count,
+        'product': product,
+        'form': form,
+        'customer_count': customer_count,
+        'product_count': product_count,
+        'order_count': order_count,
+    }
+    return render(request, 'dashboard/invoice_sales-order.html', context)
+
+
+#invoices_delivery
+@login_required(login_url='user-login')
+def invoices_delivery(request):
+    """"""
+    proforma = Proforma.objects.all().order_by('-id',)
+    proforma_count = proforma.count()
+
+    invoice_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
+
+    category = Category.objects.all().order_by('-id',)
+    category_count = category.count()
+
+    product = Product.objects.all().order_by('-id',)
+    product_count = product.count()
+    customer = Customer.objects.all()
+    customer_count = customer.count()
+    order = Order.objects.all().order_by('-id',)
+    order_count = order.count()
+    """"""
+
+    if request.method == 'POST':
+        form = InvoiceForm(request.POST)
+        if request.POST.get("client"):
+          custo = Customer.objects.get(id=int(request.POST.get("client")))
+
+
+          request.POST._mutable = True
+          request.POST['name_backup'] = custo.name
+          request.POST['email_backup'] = custo.email
+          request.POST['phone_backup'] = custo.phone
+          request.POST['address_backup'] = custo.address
+          request.POST['Type'] = "Delivery"
+          #messages.success(request, f'{custo.name}: inside post client')
+          #form.save()
+
+          #if form.is_valid():
+          #  form.save()
+          #  messages.success(request, f'inside is valid after client')
+          #  return redirect('dashboard-invoices')
+
+
+        if form.is_valid():
+          form.save()
+          messages.success(request, f'A delivery has been added')
+          return redirect('dashboard-invoices-delivery')
+    else:
+       #messages.success(request, f'inside else')
+       form = InvoiceForm()
+
+
+    context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
+        'proforma':proforma,
+        'proforma_count':proforma_count,
+        'invoice': invoice,
+        'invoice_count': invoice_count,
+        'category': category,
+        'category_count': category_count,
+        'product': product,
+        'form': form,
+        'customer_count': customer_count,
+        'product_count': product_count,
+        'order_count': order_count,
+    }
+    return render(request, 'dashboard/invoice_delivery.html', context)
 
 
 @login_required(login_url='user-login')
@@ -354,7 +608,28 @@ def invoices_edit_product(request, pk):
 
     invoice = Invoice.objects.all().order_by('-id',)
     invoice_product = InvoiceProduct.objects.all()
-    invoice_count = invoice.count()
+    #invoice_count = invoice.count()
+
+    invoice_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
+
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
 
@@ -444,6 +719,9 @@ def invoices_edit_product(request, pk):
 
 
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'client_funds': item2.client.Funds,
         'balance': item2.Balance,
         'proforma':proforma,
@@ -844,8 +1122,25 @@ def proformas(request):
     proforma_count = proforma.count()
     proforma_product = ProformaProduct.objects.all()
 
-    invoice  = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    invoice_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
@@ -891,6 +1186,9 @@ def proformas(request):
 
 
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'proforma_product':proforma_product,
@@ -919,7 +1217,28 @@ def proformas_edit_product(request, pk):
 
     invoice = Invoice.objects.all().order_by('-id',)
     invoice_product = InvoiceProduct.objects.all()
-    invoice_count = invoice.count()
+    #invoice_count = invoice.count()
+
+    invoice_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
+
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
 
@@ -980,6 +1299,9 @@ def proformas_edit_product(request, pk):
     item2 = Proforma.objects.get(id=pk)
     total_after_discount = item2.Total - item2.discount
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'proforma_product':proforma_product,
@@ -1191,8 +1513,25 @@ def customers(request):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
 
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
@@ -1215,6 +1554,9 @@ def customers(request):
         form = CustomerForm()
 
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'form':form,
@@ -1282,8 +1624,25 @@ def customer_detail(request, pk):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
 
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
@@ -1297,6 +1656,9 @@ def customer_detail(request, pk):
     order_count = order.count()
     customers = User.objects.get(id=pk)
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'invoice': invoice,
@@ -1318,8 +1680,26 @@ def customer_detail(request, pk):
 def order(request):
     proforma = Proforma.objects.all().order_by('-id',)
     proforma_count = proforma.count()
+
+    invoice_count = 0
     invoice = Invoice.objects.all().order_by('-id',)
-    invoice_count = invoice.count()
+    for inv in invoice:
+        if inv.Type == "Invoice":
+            invoice_count += 1
+
+
+    invoice_salesorder_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Sales Order":
+            invoice_salesorder_count += 1
+
+
+    invoice_delivery_count = 0
+    invoice = Invoice.objects.all().order_by('-id',)
+    for inv in invoice:
+        if inv.Type == "Delivery":
+            invoice_delivery_count += 1
 
     category = Category.objects.all().order_by('-id',)
     category_count = category.count()
@@ -1332,6 +1712,9 @@ def order(request):
     product_count = product.count()
 
     context = {
+        'delivery': invoice_delivery_count,
+        'salesorder': invoice_salesorder_count,
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'invoice': invoice,

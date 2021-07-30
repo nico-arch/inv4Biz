@@ -26,7 +26,8 @@ class InvoiceForm(forms.ModelForm):
                   'name_backup',
                   'email_backup',
                   'phone_backup',
-                  'address_backup',]
+                  'address_backup',
+                  'Type',]
 
   def __init__(self, *args, **kwargs):
     super(InvoiceForm, self).__init__(*args, **kwargs)
@@ -35,6 +36,8 @@ class InvoiceForm(forms.ModelForm):
       self.fields['email_backup'].widget = forms.HiddenInput()
       self.fields['phone_backup'].widget = forms.HiddenInput()
       self.fields['address_backup'].widget = forms.HiddenInput()
+      self.fields['Type'].widget = forms.HiddenInput()
+
       #widgets = {'name_backup': forms.HiddenInput()}
 
 

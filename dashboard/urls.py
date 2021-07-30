@@ -23,7 +23,10 @@ urlpatterns = [
     #path('salesorders/deposit/show/<int:pk>/', views.salesorders_deposit_show, name='dashboard-salesorder-deposit-show'),
 
 # Invoice
-    path('invoices/', views.invoices, name='dashboard-invoices'),
+    path('salesorder/', views.invoices_salesorder, name='dashboard-invoices-salesorder'),#salesorder
+    path('delivery/', views.invoices_delivery, name='dashboard-invoices-delivery'),#delivery
+
+    path('invoices/', views.invoices, name='dashboard-invoices'),#invoice
     path('invoices/delete/<int:pk>/', views.invoices_delete, name='dashboard-invoices-delete'),
     path('invoices/detail/<int:pk>/', views.invoices_detail, name='dashboard-invoices-detail'),
     path('invoices/edit/<int:pk>/',   views.invoices_edit,   name='dashboard-invoices-edit'),

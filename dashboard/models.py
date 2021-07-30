@@ -58,7 +58,11 @@ Payment_Hystory_Type = (
     ('Deposit', 'Deposit'),
     ('Withdrawal', 'Withdrawal'),
 )
-
+Invoice_Type = (
+    ('Invoice', 'Invoice'),
+    ('Sales Order', 'Sales Order'),
+    ('Delivery', 'Delivery'),
+)
 
 class Category(models.Model):
     name = models.CharField(max_length=500, help_text='')
@@ -87,6 +91,10 @@ class Invoice(models.Model):
     #Total = models.FloatField()
     #
     #client = models.CharField('Client', max_length=300, null=True)
+    Type   = models.CharField('Invoice Type',
+                                   max_length = 50,
+                                   choices = Invoice_Type,
+                                   null = True)
     client = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True)
     name_backup = models.CharField(max_length=500, null = True)
     email_backup = models.EmailField(max_length=254, null=True)
@@ -114,7 +122,7 @@ class Invoice(models.Model):
     class Meta:
         ordering = ('Date',)
     def __str__(self):
-        return 'Invoice : {0}'.format(self.id)
+        return 'Invoice :{0}  client :{1}  type :{2}'.format(self.id, self.client, self.Type)
 
 
 class InvoiceProduct(models.Model):
