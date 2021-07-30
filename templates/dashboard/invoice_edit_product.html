@@ -1,4 +1,4 @@
-{% extends 'partials/base.html' %} {% block title %}Invoices Page
+{% extends 'partials/base.html' %} {% block title %}{{ invoice_clicked.Type }} Page
 {% endblock %} {% load crispy_forms_tags %} {% block content %}
 {% include 'partials/topside.html' %}
 <div class="row my-4">
@@ -9,7 +9,7 @@
 		</div>
 		{% endfor %} {% endif %}
 		<div class="card card-body">
-			<h5>Invoice No: {{ id_invoice }}, Total: {{ invoice_total }}</h5>
+			<h5>{{ invoice_clicked.Type }} No: {{ id_invoice }}, Total: {{ invoice_total }}</h5>
 			<h5>Client's funds: {{client_funds}}</h5>
 			<hr>
 			<form method="POST">
@@ -104,7 +104,7 @@
 
 
         <table class="table bg-white">
-          Invoice's products, <b>total = {{ invoice_total }}, total after discount = {{total_after_discount}}, customer's due = {{balance}} </b>
+          {{ invoice_clicked.Type }}'s products, <b>total = {{ invoice_total }}, total after discount = {{total_after_discount}}, customer's due = {{balance}} </b>
             <thead class="bg-info text-white">
                 <tr>
                     <th scope="col">Product x Qtty </th>

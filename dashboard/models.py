@@ -122,7 +122,8 @@ class Invoice(models.Model):
     class Meta:
         ordering = ('Date',)
     def __str__(self):
-        return 'Invoice :{0}  client :{1}  type :{2}'.format(self.id, self.client, self.Type)
+        #return 'Invoice :{0}  client :{1}  type :{2}'.format(self.id, self.client, self.Type)
+        return '{0} # {1}'.format(self.Type, self.id)
 
 
 class InvoiceProduct(models.Model):

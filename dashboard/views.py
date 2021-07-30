@@ -73,7 +73,7 @@ def index(request):
     context = {
         'delivery': invoice_delivery_count,
         'salesorder': invoice_salesorder_count,
-        
+
         'proforma':proforma,
         'proforma_count':proforma_count,
         'invoice': invoice,
@@ -719,6 +719,7 @@ def invoices_edit_product(request, pk):
 
 
     context = {
+        'invoice_clicked': item2,
         'delivery': invoice_delivery_count,
         'salesorder': invoice_salesorder_count,
 
