@@ -15,7 +15,7 @@
 			<form method="POST">
 				{% csrf_token %} {{ form|crispy }}
 				<input class="btn btn-success btn-block" type="submit" value="Save">
-				<a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-deposit-show' id_invoice %}">Payment's history</a>
+				<a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-deposit-show' id_invoice %}">Deposit's history</a>
          {% if invoice_total > 0 %}
          <a class="btn btn-info btn-block" href="{% url 'dashboard-invoices-printed' id_invoice %}" target="_blank">Print</a>
          {% endif %}

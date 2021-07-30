@@ -129,6 +129,7 @@
 				</td>
           <td></td>
           <td></td>
+					<td></td>
 					<td>
               {{invoice.Type}} #: {{invoice.id}}<br />
 						  Date: {{invoice.Date.day}}/{{invoice.Date.month}}/{{invoice.Date.year}}<br />
@@ -141,11 +142,6 @@
           <td></td>
           <td></td>
 					<td></td>
-				</tr>
-        <tr class="">
-					<td></td>
-          <td></td>
-          <td></td>
 					<td></td>
 				</tr>
         <tr class="">
@@ -153,11 +149,20 @@
           <td></td>
           <td></td>
 					<td></td>
+					<td></td>
 				</tr>
         <tr class="">
 					<td></td>
           <td></td>
           <td></td>
+					<td></td>
+					<td></td>
+				</tr>
+        <tr class="">
+					<td></td>
+          <td></td>
+          <td></td>
+					<td></td>
 					<td></td>
 				</tr>
 				<tr class="information">
@@ -168,6 +173,7 @@
             cheapsolutions.ht@gmail.com
 					</td>
           <td></td>
+					<td></td>
           <td></td>
 					<td>
               {{invoice.name_backup}}<br/>
@@ -181,11 +187,6 @@
           <td></td>
           <td></td>
 					<td></td>
-				</tr>
-        <tr class="">
-					<td></td>
-          <td></td>
-          <td></td>
 					<td></td>
 				</tr>
         <tr class="">
@@ -193,17 +194,27 @@
           <td></td>
           <td></td>
 					<td></td>
-				</tr>
-        <tr class="">
-					<td></td>
-          <td></td>
-          <td></td>
 					<td></td>
 				</tr>
         <tr class="">
 					<td></td>
           <td></td>
           <td></td>
+					<td></td>
+					<td></td>
+				</tr>
+        <tr class="">
+					<td></td>
+          <td></td>
+          <td></td>
+					<td></td>
+					<td></td>
+				</tr>
+        <tr class="">
+					<td></td>
+          <td></td>
+          <td></td>
+					<td></td>
 					<td></td>
 				</tr>
 
@@ -215,6 +226,7 @@
           <td></td>
           <td></td>
 					<td></td>
+					<td></td>
 				</tr>
 
 				<tr class="details">
@@ -222,10 +234,12 @@
           <td></td>
           <td></td>
 					<td></td>
+					<td></td>
 				</tr>
 
 				<tr class="heading">
 					<td>Product</td>
+					<td>Vendor's Due quantity</td>
           <td>Quantity x</td>
 					<td>Unit price =</td>
           <td>Total price</td>
@@ -235,6 +249,7 @@
               {% if product.Invoice.id == invoice.id %}
                 <tr class="item">
                   <td>{{product.productName}}</td>
+									<td>{{product.dueQuantity}}</td>
                   <td>{{product.quantity}} x</td>
                   <td>{{product.price}} {{invoice.currency}} =</td>
                   <td>{{product.Total}} {{invoice.currency}}</td>
@@ -245,6 +260,7 @@
 				<tr class="total">
 					<td></td>
           <td></td>
+					<td></td>
           <td></td>
 					<td ><b>{{invoice.Total}} {{invoice.currency}}</b> :Total before discount</td>
 				</tr>
@@ -253,6 +269,7 @@
         <tr class="">
 					<td></td>
           <td></td>
+					<td></td>
           <td></td>
 					<td><b>{{invoice.discount}} {{invoice.currency}}</b> :discount</td>
 				</tr>
@@ -260,12 +277,21 @@
 					<td></td>
           <td></td>
           <td></td>
+					<td></td>
 					<td><b>{{total_after_discount}} {{invoice.currency}}</b>:Total after discount</td>
 				</tr>
+				<tr class="">
+				 <td></td>
+				 <td></td>
+				 <td></td>
+				 <td></td>
+				 <td><b>{{invoice.Balance}} {{invoice.currency}}</b>:Balance</td>
+			 </tr>
         <tr class="">
 					<td></td>
           <td></td>
           <td></td>
+					<td></td>
 					<td></td>
 				</tr>
         <tr class="">
@@ -273,22 +299,26 @@
           <td></td>
           <td></td>
 					<td></td>
+					<td></td>
 				</tr>
         <tr class="">
 					<td></td>
           <td></td>
           <td></td>
+					<td></td>
 					<td></td>
 				</tr>
        <tr class="">
 					<td>__________________</td>
           <td></td>
+					<td></td>
           <td></td>
 					<td>__________________</td>
 				</tr>
        <tr class="">
 					<td>Cheap Solutions</td>
           <td></td>
+					<td></td>
           <td></td>
 					<td>Client</td>
 				</tr>
