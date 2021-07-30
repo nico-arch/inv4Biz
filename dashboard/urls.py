@@ -31,10 +31,17 @@ urlpatterns = [
     path('invoices/invoice/edit_product2/<int:invoice_pk>/<int:product_pk>', views.invoices_edit_product_add,   name='dashboard-invoices-edit-product-add'),
     path('invoices/invoice/delete_product/<int:invoice_pk>/<int:invoice_product_pk>', views.invoices_edit_product_delete,   name='dashboard-invoices-edit-product-delete'),
     path('invoices/invoice/delete_product2/<int:invoice_pk>/<int:invoice_product_pk>', views.invoices_edit_product_finish,   name='dashboard-invoices-edit-product-finish'),
+
+    path('invoices/add_due/<int:invoice_pk>/<int:product_pk>', views.invoices_edit_add_due, name='dashboard-invoices-add-due'),
+    path('invoices/tranfer_delete_due/<int:invoice_pk>/<int:invoice_product_pk>', views.invoices_edit_transfer_delete_due, name='dashboard-invoices-transfer-delete-due'),
+
+
     path('invoices/invoice/printed/<int:pk>/', views.invoices_printed,   name='dashboard-invoices-printed'),
     path('invoices/deposit/show/<int:pk>/', views.invoices_deposit_show, name='dashboard-invoices-deposit-show'),
     path('invoices/deposit/add/<int:pk>/', views.invoices_deposit_add, name='dashboard-invoices-deposit-add'),
     path('invoices/deposit/delete/<int:deposit_pk>/<int:invoice_pk>/', views.invoices_deposit_delete, name='dashboard-invoices-deposit-delete'),
+
+
 
 # Proforma
     path('proformas/', views.proformas, name='dashboard-proformas'),

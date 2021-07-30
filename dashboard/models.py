@@ -54,6 +54,11 @@ Payment_Type = (
     ('Credit', 'Credit'),
 )
 
+Payment_Hystory_Type = (
+    ('Deposit', 'Deposit'),
+    ('Withdrawal', 'Withdrawal'),
+)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=500, help_text='')
@@ -128,6 +133,14 @@ class InvoiceProduct(models.Model):
 
 class InvoiceDeposit(models.Model):
     Invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE, null=True)
+
+
+
+    Type   = models.CharField('Payment Type',
+                                   max_length=50,
+                                   choices=Payment_Hystory_Type,
+                                   null=True)
+
 
     Amount = models.FloatField(null=True)
     Date   = models.DateTimeField('Date',

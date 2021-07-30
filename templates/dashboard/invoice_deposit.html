@@ -12,23 +12,56 @@
         <table class="table table-hover table-sm bg-white search-table" >
             <thead class="bg-info text-white">
                 <tr>
-                    <th scope ="col">Balance = </th>
-                    <th scope="col">{{balance}} {{invoice.currency}}</th>
+                    <th scope ="col">Customer's Funds = </th>
+                    <th scope="col">{{invoice.client.Funds}}{{invoice.currency}}</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
 
             <tbody>
-                 {% if balance > 0 %}
+
                     <form class="" action="{% url 'dashboard-invoices-deposit-add' invoice.id %}" method="POST">
                       {% csrf_token %}
                       <tr>
+                        {% if invoice.client.Funds > 0 and balance > 0 %}
                            <td>
                              <input class="form-control " name="amount" type="number" step="0.01"  min="0" max="{{balance}}" id="input_value" placeholder="Amount">
                            </td>
-                           <td><input class="btn btn-success btn-block" type="submit" value="Add"></td>
+
+                           <td><input class="btn btn-success btn-block" name="depose-from-funds" type="submit" value="Depose"></td>
+                           {% endif %}
                        </tr>
                     </form>
-                    {% endif %}
+            </tbody>
+        </table>
+
+        <table class="table table-hover table-sm bg-white search-table" >
+            <thead class="bg-info text-white">
+                <tr>
+                    <th scope ="col">Customer's due = </th>
+                    <th scope="col">{{balance}} {{invoice.currency}}</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                    <form class="" action="{% url 'dashboard-invoices-deposit-add' invoice.id %}" method="POST">
+                      {% csrf_token %}
+                      <tr>
+                        {% if balance > 0 %}
+                           <td>
+                             <input class="form-control " name="amount" type="number" step="0.01"  min="0" max="{{balance}}" id="input_value" placeholder="Amount">
+                           </td>
+
+                           <td><input class="btn btn-success btn-block" name="depose" type="submit" value="Depose"></td>
+                           {% endif %}
+                           <!--
+                           {% if balance <= 0  %}
+                           <td></td>
+                           {% endif %}
+                           <td><input class="btn btn-success btn-block" name="withdraw" type="submit" value="Withdraw"></td>
+                           -->
+                       </tr>
+                    </form>
             </tbody>
         </table>
 
@@ -36,9 +69,11 @@
             <thead class="bg-info text-white">
                 <tr>
                     <th scope="col" >Invoice</th>
+                    <th scope="col" >Type</th>
                     <th scope="col">Amount</th>
                     <th scope ="col">Date</th>
                     <th scope="col">Activity</th>
+                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
@@ -46,14 +81,16 @@
                {% if deposit.Invoice.id == invoice.id %}
                 <tr>
                     <td>{{ deposit.Invoice }}</td>
+                    <td>{{ deposit.Type }}</td>
                     <td>{{ deposit.Amount }} {{ deposit.Invoice.currency }}</td>
                     <td>{{ deposit.Date }}</td>
 
                       <form action = "{% url 'dashboard-invoices-deposit-delete' deposit.id invoice.id %}" method="POST">
                         {% csrf_token %}
                     <td>
-                      <input class="btn btn-danger btn-sm ml-2" type="submit" value="Delete">
+                      <input class="btn btn-danger btn-sm ml-2" name="delete" type="submit" value="Delete">
                     </td>
+                    <td><input class="btn btn-success btn-sm" name="withdraw" type="submit" value="Withdraw"></td>
                      </form >
 
                 </tr>

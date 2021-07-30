@@ -307,8 +307,6 @@ def invoices(request):
        form = InvoiceForm()
 
 
-
-
     context = {
         'proforma':proforma,
         'proforma_count':proforma_count,
@@ -414,8 +412,37 @@ def invoices_edit_product(request, pk):
 
     Invoice.objects.filter(id=pk).update(Total= invoice_total_amount)
 
+
+#    """
+    #Balance todo-------------------------------------------------------
+    #invoice = Invoice.objects.all()
+    invoice_deposit = InvoiceDeposit.objects.all().order_by('-id',)
+    invoice_to_be_printed = Invoice.objects.get(id=pk)
+
+    amountPaid = 0.0
+    amountWithdrawn = 0.0
+    amount_paid_after_withdrawn = 0.0
+    balance = 0.0
+    for deposit in invoice_deposit:
+        if deposit.Invoice.id == pk and deposit.Type == "Deposit":
+            amountPaid += float(deposit.Amount)
+
+    for withdraw in invoice_deposit:
+        if withdraw.Invoice.id == pk and withdraw.Type == "Withdrawal":
+            amountWithdrawn += float(withdraw.Amount)
+
+    total_after_discount2 = float(invoice_to_be_printed.Total - invoice_to_be_printed.discount)
+    amount_paid_after_withdrawn = amountPaid - amountWithdrawn
+
+    balance = total_after_discount2 - amount_paid_after_withdrawn
+    Invoice.objects.filter(id=pk).update(Balance = balance)
+    #Balance todo^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+    #---------------------------------------------------
     item2 = Invoice.objects.get(id=pk)
     total_after_discount = item2.Total - item2.discount
+
+
     context = {
         'client_funds': item2.client.Funds,
         'balance': item2.Balance,
@@ -518,13 +545,16 @@ def invoices_edit_product_search(request, invoice_pk, invoice_product_pk):
     query = self.request.GET.get('q')
 
     return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
- 
+
 
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
 def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
     #Get the selected product in the invoice
     productInvoice = InvoiceProduct.objects.get(id=invoice_product_pk)
+    #Get the customer account
+    invoice = Invoice.objects.get(id=invoice_pk)
+    customer = Customer.objects.get(id=invoice.client.id)
 
     if request.GET.get('quantity2') is  "" :
       #Return the product in the stock if the product already exist
@@ -532,7 +562,9 @@ def invoices_edit_product_delete(request, invoice_pk, invoice_product_pk):
         #Modify the product in the invoice if the product exists in the invoice
         product = Product.objects.get(name=productInvoice.productName)
         Product.objects.filter(name=productInvoice.productName).update(quantity= product.quantity + productInvoice.quantity)
+
         productInvoice.delete()
+
         return redirect('dashboard-invoices-edit-product', pk=invoice_pk)
     else:
       quantityy = request.GET.get('quantity2')
@@ -571,8 +603,6 @@ def invoices_edit_product_finish(request, invoice_pk, invoice_product_pk):
 
 
 
-
-
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
 def invoices_delete(request, pk):
@@ -600,6 +630,85 @@ def invoices_printed(request, pk):
             }
   return render(request, 'dashboard/invoice_printed.html', context)
 
+
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_edit_add_due(request, invoice_pk, product_pk):
+    invoice  = Invoice.objects.get(id=invoice_pk )
+    produt = Product.objects.get(id=product_pk )
+
+    #Catch to the request:
+    if request.method == 'POST':
+        if request.POST.get("due_quantity") == '':
+            return redirect('dashboard-invoices-edit-product', pk = invoice_pk)
+        #If add button is pressed, use the value from input: due_quantity :
+        if float( request.POST.get("due_quantity") ) > 0.0 and "add" in request.POST and InvoiceProduct.objects.filter(Invoice= invoice, Product = produt).exists():
+            invoice_product = InvoiceProduct.objects.get(Invoice= invoice, Product= produt)
+            amount = float( request.POST.get("due_quantity") )
+            due_quantity = invoice_product.dueQuantity
+            due_quantity += amount
+            invoice_product.dueQuantity = due_quantity
+            invoice_product.save()
+            pass
+        else:
+            messages.success(request, f'Error!')
+
+    return redirect('dashboard-invoices-edit-product', pk = invoice_pk)
+
+
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_edit_transfer_delete_due(request, invoice_pk, invoice_product_pk):
+    invoice  = Invoice.objects.get(id=invoice_pk )
+    invoice_product = InvoiceProduct.objects.get(pk= invoice_product_pk)
+    #produt = Product.objects.get(pk=invoice_product.Product.id )
+
+    #Catch to the request:
+    if request.method == 'POST':
+        if request.POST.get("due_quantity") == '':
+            return redirect('dashboard-invoices-edit-product', pk = invoice_pk)
+
+        #If tranfer button is pressed, use the value from input: due_quantity :
+        if Product.objects.filter(pk= invoice_product.Product.id).exists(): #if the product exists
+            produt = Product.objects.get(pk=invoice_product.Product.id )
+            if float( request.POST.get("due_quantity") ) <= invoice_product.dueQuantity and float( request.POST.get("due_quantity") ) > 0.0 and "tranfer" in request.POST and produt.quantity >= float( request.POST.get("due_quantity") ) and invoice_product.dueQuantity > 0:
+
+                amount = float( request.POST.get("due_quantity") )
+                due_quantity = invoice_product.dueQuantity
+                due_quantity -= amount
+                invoice_product.dueQuantity = due_quantity
+
+                invoice_product_quantity = invoice_product.quantity
+                invoice_product_quantity += amount
+                invoice_product.quantity = invoice_product_quantity
+
+                invoice_product_total = invoice_product.quantity * invoice_product.price
+                invoice_product.Total = invoice_product_total
+
+                #take the products in stock for the transfer
+                product_quantity_from_stock = produt.quantity
+                product_quantity_from_stock -= amount
+                produt.quantity = product_quantity_from_stock
+
+                produt.save()
+                invoice_product.save()
+                pass
+
+
+
+        #If delete button is pressed, use the value from input: due_quantity :
+        if float( request.POST.get("due_quantity") ) <= invoice_product.dueQuantity and float( request.POST.get("due_quantity") ) > 0.0 and "delete" in request.POST and invoice_product.dueQuantity > 0 and InvoiceProduct.objects.filter(Invoice= invoice, Product = produt).exists():
+            amount = float( request.POST.get("due_quantity") )
+            due_quantity = invoice_product.dueQuantity
+            due_quantity -= amount
+            invoice_product.dueQuantity = due_quantity
+            invoice_product.save()
+            pass
+
+
+    return redirect('dashboard-invoices-edit-product', pk = invoice_pk)
+
+
 # Deposit
 @login_required(login_url='user-login')
 @allowed_users(allowed_roles=['Admin'])
@@ -609,13 +718,23 @@ def invoices_deposit_show(request, pk):
   invoice_to_be_printed = Invoice.objects.get(id=pk)
 
   amountPaid = 0.0
+  amountWithdrawn = 0.0
+  amount_paid_after_withdrawn = 0.0
+  balance = 0.0
   for deposit in invoice_deposit:
-      if deposit.Invoice.id == pk:
+      if deposit.Invoice.id == pk and deposit.Type == "Deposit":
           amountPaid += float(deposit.Amount)
 
+  for withdraw in invoice_deposit:
+      if withdraw.Invoice.id == pk and withdraw.Type == "Withdrawal":
+          amountWithdrawn += float(withdraw.Amount)
+
   total_after_discount = float(invoice_to_be_printed.Total - invoice_to_be_printed.discount)
-  balance = float(total_after_discount - amountPaid)
+  amount_paid_after_withdrawn = amountPaid - amountWithdrawn
+
+  balance = total_after_discount - amount_paid_after_withdrawn
   Invoice.objects.filter(id=pk).update(Balance = balance)
+
 
   context = {
             'balance': balance,
@@ -629,21 +748,53 @@ def invoices_deposit_show(request, pk):
 @allowed_users(allowed_roles=['Admin'])
 def invoices_deposit_add(request, pk):
     invoice_to_be_printed = Invoice.objects.get(id=pk)
+    invoice_deposit = InvoiceDeposit.objects.all().order_by('-id',)
+    amountPaid = 0.0
+    amountWithdrawn = 0.0
+    amount_to_paid_after_withdrawn = 0.0
+
+    for deposit in invoice_deposit:
+        if deposit.Invoice.id == pk and deposit.Type == "Deposit":
+            amountPaid += float(deposit.Amount)
+    for withdraw in invoice_deposit:
+        if withdraw.Invoice.id == pk and withdraw.Type == "Withdrawal":
+            amountWithdrawn += float(withdraw.Amount)
+
+    total_after_discount = float(invoice_to_be_printed.Total - invoice_to_be_printed.discount)
+    amount_to_paid_after_withdrawn = amountPaid - amountWithdrawn
 
     if request.method == 'POST':
-
         if request.POST.get("amount") == '':
             return redirect('dashboard-invoices-deposit-show', pk=pk)
 
-        if float( request.POST.get("amount") ) > 0.0:
+        if float( request.POST.get("amount") ) > 0.0 and "depose-from-funds" in request.POST and float( request.POST.get("amount") ) <=invoice_to_be_printed.Balance:
             amount = float( request.POST.get("amount") )
+            customer = Customer.objects.get(id=invoice_to_be_printed.client.id)
+            funds = customer.Funds - amount
+
+            customer.Funds = funds
+            customer.save()
 
             invoiceDeposit = InvoiceDeposit(id=None,
                             Invoice=invoice_to_be_printed,
+                            Type="Deposit",
                             Amount = amount,
                             )
 
             invoiceDeposit.save()
+
+
+        if float( request.POST.get("amount") ) > 0.0 and "depose" in request.POST and float( request.POST.get("amount") ) <=invoice_to_be_printed.Balance:
+            amount = float( request.POST.get("amount") )
+
+            invoiceDeposit = InvoiceDeposit(id=None,
+                            Invoice=invoice_to_be_printed,
+                            Type="Deposit",
+                            Amount = amount,
+                            )
+
+            invoiceDeposit.save()
+
 
     return redirect('dashboard-invoices-deposit-show', pk=pk)
 
@@ -654,7 +805,20 @@ def invoices_deposit_add(request, pk):
 def invoices_deposit_delete(request, deposit_pk, invoice_pk):
     deposit = InvoiceDeposit.objects.get(id=deposit_pk)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and "delete" in request.POST:
+        deposit.delete()
+        return redirect('dashboard-invoices-deposit-show', pk = invoice_pk)
+
+    if request.method == 'POST' and "withdraw" in request.POST:
+        invoice = Invoice.objects.get(id=invoice_pk)
+        customer = Customer.objects.get(id=invoice.client.id)
+
+        newFunds = customer.Funds
+        newFunds += deposit.Amount
+
+        customer.Funds = newFunds
+        customer.save()
+
         deposit.delete()
         return redirect('dashboard-invoices-deposit-show', pk = invoice_pk)
 
