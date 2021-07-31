@@ -62,7 +62,7 @@
                         data: {
                             labels: [{% for invoice in invoice %} '{{invoice}}',{% endfor %}],
                     datasets: [{
-                        label: 'Invoices: HTG',
+                        label: 'Payments activities: HTG',
                         data: [{% for invoice in invoice %} {{ invoice.Total }}, {% endfor %}],
                         backgroundColor: [
                             'rgba(255, 99, 132, 1)',
