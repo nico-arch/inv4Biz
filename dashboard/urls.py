@@ -26,6 +26,10 @@ urlpatterns = [
     path('salesorder/', views.invoices_salesorder, name='dashboard-invoices-salesorder'),#salesorder
     path('delivery/', views.invoices_delivery, name='dashboard-invoices-delivery'),#delivery
 
+    path('invoices/transfer_to_salesorder/<int:pk>/', views.invoices_transfer_to_salesorder, name='dashboard-invoices-tranfer-salesorder'),
+    path('invoices/transfer_to_delivery/<int:pk>/', views.invoices_transfer_to_delivery, name='dashboard-invoices-tranfer-delivery'),
+    path('invoices/transfer_to_invoice/<int:pk>/', views.invoices_transfer_to_invoice, name='dashboard-invoices-tranfer-invoice'),
+
     path('invoices/', views.invoices, name='dashboard-invoices'),#invoice
     path('invoices/delete/<int:pk>/', views.invoices_delete, name='dashboard-invoices-delete'),
     path('invoices/detail/<int:pk>/', views.invoices_detail, name='dashboard-invoices-detail'),
@@ -56,7 +60,7 @@ urlpatterns = [
     path('proformas/proforma/delete_product/<int:proforma_pk>/<int:proforma_product_pk>', views.proformas_edit_product_delete,   name='dashboard-proformas-edit-product-delete'),
     path('proformas/proforma/delete_product2/<int:proforma_pk>/<int:proforma_product_pk>', views.proformas_edit_product_finish,   name='dashboard-proformas-edit-product-finish'),
     path('proformas/proforma/printed/<int:pk>/', views.proformas_printed,   name='dashboard-proformas-printed'),
-
+    path('proformas/proforma/tranfer/<int:pk>/', views.proformas_transfer_to_sales_order,   name='dashboard-proformas-tranfer-salesorder'),
 
 #Customer
     path('customers/', views.customers, name='dashboard-customers'),

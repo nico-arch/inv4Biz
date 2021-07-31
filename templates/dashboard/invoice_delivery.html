@@ -26,6 +26,8 @@
                     <th scope="col">Total</th>
                     <th scope="col">Activity</th>
                     <th scope="col"></th>
+										<th scope="col"></th>
+										<th scope="col"></th>
 
                 </tr>
             </thead>
@@ -44,6 +46,14 @@
                     <td>
                       <a class="btn btn-danger btn-sm ml-2"
                             href="{% url 'dashboard-invoices-delete' invoice.id %}">Delete</a>
+                    </td>
+										<td>
+                      <a class="btn btn-success btn-sm ml-2"
+                            href="{% url 'dashboard-invoices-tranfer-salesorder' invoice.id %}">Transfer to Sales Order</a>
+                    </td>
+										<td>
+                      <a class="btn btn-success btn-sm ml-2"
+                            href="{% url 'dashboard-invoices-tranfer-invoice' invoice.id %}">Transfer to Invoice</a>
                     </td>
                 </tr>
 								{% endif %}

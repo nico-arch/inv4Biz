@@ -30,7 +30,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">Phone</th>
-                    <th scope ="col">Address</th>
+                    <th scope ="col">Funds</th>
                     <th scope="col">Activity</th>
                     <th scope="col"></th>
                 </tr>
@@ -41,7 +41,7 @@
                     <td>{{ customer.name }}</td>
                     <td>{{ customer.email }}</td>
                     <td>{{ customer.phone }}</td>
-                    <td>{{ customer.address }}</td>
+                    <td>{{ customer.Funds }} HTG</td>
                     <td>
                         <a class="btn btn-info btn-sm mr-2"
                             href="{% url 'dashboard-customers-edit' customer.id %}">Edit</a>

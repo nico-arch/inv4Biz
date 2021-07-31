@@ -133,8 +133,8 @@ class InvoiceProduct(models.Model):
     productName = models.CharField(max_length=500,  null=True)
     quantity = models.PositiveIntegerField(null=True)
     dueQuantity = models.PositiveIntegerField('Due Qtty', default=0, null=True)
-    price = models.FloatField(null=True)
-    Total = models.FloatField(null=True)
+    price = models.FloatField(default=0.0, null=True)
+    Total = models.FloatField(default=0.0, null=True)
 
     def __str__(self):
         return 'Product in invoice : {0}'.format(self.Invoice.id)

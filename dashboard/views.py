@@ -8,6 +8,9 @@ from .decorators import auth_users, allowed_users
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from datetime import *
+import uuid
+from django.utils import timezone
 """"
 category = Category.objects.all()
 category_count = category.count()
@@ -683,7 +686,7 @@ def invoices_edit_product(request, pk):
       if invoice_.id == pk:
         for product_in_invoice in invoice_product:
           if product_in_invoice.Invoice.id == pk:
-            invoice_total_amount = invoice_total_amount + product_in_invoice.Total
+            invoice_total_amount = invoice_total_amount + float(product_in_invoice.Total)
 
     Invoice.objects.filter(id=pk).update(Total= invoice_total_amount)
 
@@ -1106,8 +1109,35 @@ def invoices_deposit_delete(request, deposit_pk, invoice_pk):
 
 
 
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_transfer_to_salesorder(request,pk):
+    invoice = Invoice.objects.get(id=pk)
+    invoice.Type = "Sales Order"
+    invoice.save()
+    messages.success(request, f'Sales Order ID:{invoice.id} has been transferred successfully')
 
+    return redirect('dashboard-invoices-salesorder')
 
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_transfer_to_delivery(request,pk):
+    invoice = Invoice.objects.get(id=pk)
+    invoice.Type = "Delivery"
+    invoice.save()
+    messages.success(request, f'Delivery ID:{invoice.id} has been transferred successfully')
+
+    return redirect('dashboard-invoices-delivery')
+
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def invoices_transfer_to_invoice(request,pk):
+    invoice = Invoice.objects.get(id=pk)
+    invoice.Type = "Invoice"
+    invoice.save()
+    messages.success(request, f'Invoice ID:{invoice.id} has been transferred successfully')
+
+    return redirect('dashboard-invoices')
 
 
 
@@ -1493,6 +1523,7 @@ def proformas_printed(request, pk):
   proforma_product = ProformaProduct.objects.all()
   proforma_to_be_printed = Proforma.objects.get(id=pk)
 
+
   total_after_discount = proforma_to_be_printed.Total - proforma_to_be_printed.discount
 
   context = {
@@ -1502,6 +1533,61 @@ def proformas_printed(request, pk):
             }
   return render(request, 'dashboard/proforma_printed.html', context)
 
+@login_required(login_url='user-login')
+@allowed_users(allowed_roles=['Admin'])
+def proformas_transfer_to_sales_order(request, pk):
+  proforma = Proforma.objects.get(id=pk) #get the proforma
+  proforma_product = ProformaProduct.objects.all()
+
+  #copy the proforma to a new salesorder
+  salesorderFromProforma = Invoice(id=None, Type="Sales Order",
+                                client = proforma.client,
+                                name_backup = proforma.client.name,
+                                email_backup =proforma.client.email,
+                                phone_backup =proforma.client.phone,
+                                address_backup =proforma.client.address,
+                                #PoNumber =
+                                #Date = datetime.now,
+                                #Total =
+                                discount = proforma.discount,
+                                #Balance =
+                                #currency =
+                            )
+
+  salesorderFromProforma.save()
+
+  for product in proforma_product:
+      if product.Proforma.id == proforma.id:
+          #copy the producto from the proforma to the salesorder
+          product_in_stock = Product.objects.get(id=product.Product.id)
+
+          due_quantity_in_salesorder = 0
+          quantity_in_salesorder = product.quantity
+          if product.quantity >= product_in_stock.quantity:
+              due_quantity_in_salesorder = product.quantity - product_in_stock.quantity
+              quantity_in_salesorder = product_in_stock.quantity
+              product_in_stock.quantity = 0
+              product_in_stock.save()
+
+          if product.quantity < product_in_stock.quantity:
+              new_product_quantity_in_stock = product_in_stock.quantity - product.quantity
+              product_in_stock.quantity = new_product_quantity_in_stock
+              product_in_stock.save()
+          new_total = quantity_in_salesorder * product.price
+          salesorderProductFromProforma = InvoiceProduct(id=None, Invoice = salesorderFromProforma,
+                                          Product = product.Product,
+                                          productName = product.productName,
+                                          quantity = quantity_in_salesorder,
+                                          dueQuantity = due_quantity_in_salesorder,
+                                          price = product.price,
+                                          #Total = product.Total,
+                                          Total = new_total,
+                                          )
+
+          salesorderProductFromProforma.save()
+
+  proforma.delete()
+  return redirect('dashboard-invoices-salesorder')
 
 
 
