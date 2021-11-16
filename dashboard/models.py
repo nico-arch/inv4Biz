@@ -6,7 +6,12 @@ from django.utils import timezone
 
 # Create your models here.
 
+class Test(models.Model):
+    name = models.CharField(max_length=500, unique=True, null =True)
 
+
+    def __str__(self):
+        return '{0}'.format(self.name)
 
 ###############################to be continued client provider
 class Customer(models.Model):
